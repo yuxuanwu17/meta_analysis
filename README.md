@@ -10,17 +10,17 @@ The full script was in final file. But due to the size limitation, I could not u
 
 ![Alt text](https://github.com/yuxuanwu17/meta_analysis/blob/master/figure/WechatIMG26.jpeg)
 
-### Figure 1. Forest plot of the basic model. This is a Random Effect model which accommodates differences in study sample. Q statistic is based on the chi-square distribution, most commonly testing heterogeneity. I2 index is the total variability in a set of effect sizes due to true heterogeneity. Log Risk Ratio is a measurement of effect size. 
+Figure 1. Forest plot of the basic model. This is a Random Effect model which accommodates differences in study sample. Q statistic is based on the chi-square distribution, most commonly testing heterogeneity. I2 index is the total variability in a set of effect sizes due to true heterogeneity. Log Risk Ratio is a measurement of effect size. 
 
 ![Alt text](https://github.com/yuxuanwu17/meta_analysis/blob/master/figure/WechatIMG30.png)
 
-### Figure 2. The Baujat plot to identify studies contributing to heterogeneity. The study ID numbers represent eight studies, respectively.
+Figure 2. The Baujat plot to identify studies contributing to heterogeneity. The study ID numbers represent eight studies, respectively.
 
 
 ![Alt text](https://github.com/yuxuanwu17/meta_analysis/blob/master/figure/WechatIMG31.jpeg)
 
-### Figure 3. Forest plot of moderator analysis.
+Figure 3. Forest plot of moderator analysis.
 
 ![Alt text](https://github.com/yuxuanwu17/meta_analysis/blob/master/figure/WechatIMG32.png)
 
-### Figure 4. The Funnel plot.
+Figure 4. The Funnel plot.
