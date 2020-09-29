@@ -1,4 +1,3 @@
-library(metafor)
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 library(BSgenome.Hsapiens.UCSC.hg19)
 txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
@@ -11,22 +10,22 @@ YGasd <- list()
 for(join in 1:10){
   po <- (join-1)*5133+1
   mo <-(join)*5133
-  hk_exon <- readRDS("/home/kunqi/meta_analysis/HK_exons.rds")[po:mo]
-  human_exon <- subsetByOverlaps(human,hk_exon) 
+  asda <- readRDS("/home/kunqi/meta_analysis/HK_exons.rds")[po:mo]
+  human_exon <- subsetByOverlaps(human,asda) 
   
   human_exon <- human_exon[-unique(c(which(is.na(human_exon$V1)),which(is.na(human_exon$V2)),
-                                     which(is.na(human_exon$V3)),which(is.na(human_exon$V4)),
-                                     which(is.na(human_exon$V5)),which(is.na(human_exon$V6)),
-                                     which(is.na(human_exon$V7)),which(is.na(human_exon$V8)),
-                                     which(is.na(human_exon$V9)),which(is.na(human_exon$V10)),
-                                     which(is.na(human_exon$V11)),which(is.na(human_exon$V12)),
-                                     which(is.na(human_exon$V13)),which(is.na(human_exon$V14)),
-                                     which(is.na(human_exon$V15)),which(is.na(human_exon$V16))))] 
+                                   which(is.na(human_exon$V3)),which(is.na(human_exon$V4)),
+                                   which(is.na(human_exon$V5)),which(is.na(human_exon$V6)),
+                                   which(is.na(human_exon$V7)),which(is.na(human_exon$V8)),
+                                   which(is.na(human_exon$V9)),which(is.na(human_exon$V10)),
+                                   which(is.na(human_exon$V11)),which(is.na(human_exon$V12)),
+                                   which(is.na(human_exon$V13)),which(is.na(human_exon$V14)),
+                                   which(is.na(human_exon$V15)),which(is.na(human_exon$V16))))] 
   ##human_exon  can be consider as experiment group
   
   # length(which(c(human_exon$V1-human_exon$V2)>0))
   
-  motif <- m6ALogisticModel::sample_sequence("DRACH",subsetByOverlaps(hk_exon,human),Hsapiens)
+  motif <- m6ALogisticModel::sample_sequence("DRACH",subsetByOverlaps(asda,human),Hsapiens)
   motif <- motif-2
   motif <- motif[-which(motif%in%human_exon)]
   set.seed(213)
@@ -69,54 +68,33 @@ YGasd1 <- YGasd[[1]]
 for(kj in 2:10){
   YGasd1 <- rbind(YGasd1,YGasd[[kj]])
 }
-# 
+
 colnames(YGasd1) <- c( "exp_pos","exp_neg","ctrl_pos", "ctrl_neg")
+res = rma(ai=ctrl_pos, bi=ctrl_neg, ci=exp_pos, di=exp_neg, data=YGasd1[c(2,10,18,26,50,7,15,23,31,55),], measure="RR")
+print(res$I2)
+forest(res)
+#typ1
+asdiuh <- YGasd1[c(2,10,18,26,50,7,15,23,31,55),]
+asdiuh <- as.data.frame(asdiuh)
+asdiuh$gene <- c(1,2,3,4,5,1,2,3,4,5)
+asdiuh$class <- c(1,1,1,1,1,2,2,2,2,2)
+reg = rma(ai=ctrl_pos, bi=ctrl_neg, ci=exp_pos, di=exp_neg,data=asdiuh,mods=~gene+class, measure="RR")
+reg$I2
+library(metafor)
 #type2
 asdiuh <- YGasd1[c(2,10,50,7,15,55,8,16,56),]
 asdiuh <- as.data.frame(asdiuh)
-asdiuh$gene <- c(1,2,3,1,2,3,1,2,3)  #2，7，8第一个基因的subset
-asdiuh$class <- c(1,1,1,2,2,2,3,3,3) #1 class 同一个实验
-
-reg = rma(ai=exp_pos, bi=exp_neg, ci=ctrl_pos, di=ctrl_neg,data=asdiuh,mods=~gene+class, measure="RR")
+asdiuh$gene <- c(1,2,3,1,2,3,1,2,3)
+asdiuh$class <- c(1,1,1,2,2,2,3,3,3)
+reg = rma(ai=ctrl_pos, bi=ctrl_neg, ci=exp_pos, di=exp_neg,data=asdiuh,mods=~class, measure="RR")
 reg$I2
+forest(reg)
 
-# Mettl3$X <- c("GSE46705_HeLa","GSE55572_HEK293T","GSE55572_A549","GSE94808_GSC",
-#               "GSE94613_MOLM13","GSE110320_HepG2","GSE132306_EndoC-bH1","GSE93911_HEC-1-A")
-
-
-res = rma(ci=ctrl_pos, di=ctrl_neg, ai=exp_pos, bi=exp_neg,data=asdiuh, measure="RR", 
-          method = "REML")
+library(meta)
+colnames(YGasd1) <- c( "exp_pos","exp_neg","ctrl_pos", "ctrl_neg")
+res = rma(ai=ctrl_pos, bi=ctrl_neg, ci=exp_pos, di=exp_neg, data=YGasd1[c(2,10,50,7,15,55,8,16,56),], measure="RR")
+res = rma(ci=ctrl_pos, di=ctrl_neg, ai=exp_pos, bi=exp_neg,mods=~class, data=asdiuh, measure="RR")
 forest(res)
+print(res$I2)
 
-
-# test the publication bias
-regtest(reg)
-ranktest(reg)
-funnel(res, xlab = "Correlation coefficient")
-
-
-# library(ggplot2)
-# library(grid)
-# ggsave(plot=a,filename='mettl3.pdf',height=3,width=2,device="pdf")
-
-
-# pdf(file="mett3.pdf",height=3,width=2)
-# grid.draw(a)
-# dev.off()
-
-# res = rma(ai=ctrl_pos, bi=ctrl_neg, ci=exp_pos, di=exp_neg, data=YGasd1[c(2,10,18,26,50,7,15,23,31,55),], measure="RR")
-# print(res$I2)
-# forest(res)
-# 
-# #typ1
-# asdiuh <- YGasd1[c(2,10,18,26,50,7,15,23,31,55),]
-# asdiuh <- as.data.frame(asdiuh)
-# asdiuh$gene <- c(1,2,3,4,5,1,2,3,4,5)
-# asdiuh$class <- c(1,1,1,1,1,2,2,2,2,2)
-# reg = rma(ai=ctrl_pos, bi=ctrl_neg, ci=exp_pos, di=exp_neg,data=asdiuh,mods=~gene+class, measure="RR")
-# reg$I2
-# 
-# 
-# colnames(YGasd1) <- c( "exp_pos","exp_neg","ctrl_pos", "ctrl_neg")
-# res = rma(ai=ctrl_pos, bi=ctrl_neg, ci=exp_pos, di=exp_neg, data=YGasd1[c(2,10,50,7,15,55,8,16,56),], measure="RR")
-# print(res$I2)
+forest(res)

@@ -4,7 +4,7 @@ library(metafor)
 # Mettl3 <- read.csv("/home/yuxuan.wu/meta_analysis/Mettl3.csv")
 # Mettl3 <- read.csv("/home/yuxuan.wu/meta_analysis/mettl3_exon_ctrlChange.csv")
 # Mettl3 <- read.csv("/home/yuxuan.wu/meta_analysis/mettl3_exon_divided_ctrl.csv")
-# Mettl3 <- read.csv("/home/yuxuan.wu/meta_analysis/Mettl3_exon.csv")
+Mettl3 <- read.csv("/home/yuxuan.wu/meta_analysis/Mettl3_exon.csv")
 # Mettl3 <- read.csv("/home/yuxuan.wu/meta_analysis/mettl3_total.csv")
 
 # Mettl3 <- Mettl3[c(1,5,2),]
